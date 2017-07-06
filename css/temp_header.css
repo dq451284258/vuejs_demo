@@ -1,0 +1,133 @@
+body{
+	padding: 0;
+	margin: 0;
+	font-family: "微软雅黑";
+	background: #fafafa;
+	color: #2c3e50;
+	min-width: 1200px;
+	position: relative;
+	height: 100%;
+}
+ul{
+	margin: 0;
+	padding: 0;
+}
+#vdg-header{
+	position: fixed;
+	top: 0;
+	z-index: 2;
+	width: 100%;
+	overflow: hidden;
+	box-shadow: 0 0 10px #888888;
+	height: 88px;
+	background-color: white;
+	font-size: 16px;
+	min-width: 1200px;
+}
+#logo{
+	display: inline-block;
+	line-height: 88px;
+	margin:0 10px;
+}
+#logo img{
+	vertical-align: middle;
+}
+#vdg-header-left-nav{
+	position: fixed;
+	list-style-type: none;
+	top: 0;
+	left: 252px;
+	line-height: 83px;
+}
+#vdg-header-right-nav{
+	position: fixed;
+	list-style-type: none;
+	top: 0;
+	right: 10px;
+	line-height: 83px;
+}
+#vdg-header li{
+	display: inline-block;
+	position: relative;
+	text-align: center;
+	width: 100px;
+	border-top: 5px solid white;
+}
+#vdg-header li:hover{
+	background: #f3f7f9;
+	border-top: 5px solid #008ad2;
+	transition: all .2s linear;
+}
+.nav-link{
+	cursor: pointer;
+	text-decoration: none;
+	color: #34495e;
+	display: inline-block;
+	width: 100px;
+}
+#vdg-header li.active,#vdg-header li.current{
+	background: #f3f7f9;
+	border-top: 5px solid #008ad2;
+}
+#vdg-header .nav-dropdown{
+	display: block;
+    box-sizing: border-box;
+    max-height: calc(100vh - 61px);
+    position: absolute;
+    z-index: 2;
+    top: 85px;
+    padding: 10px 0;
+    text-align: left;
+    border-radius: 4px;
+    white-space: nowrap;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px #ddd;
+    transition: all .2s ease-in-out;
+}
+.bounce-enter-active {
+  animation: bounce-in .2s;
+}
+.bounce-leave-active {
+  animation: bounce-in .2s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+#vdg-header .nav-dropdown li{
+	line-height: 1.8em;
+    margin: 0;
+    display: block;
+    border: none;
+}
+#vdg-header .nav-dropdown li:hover{
+	color: #008ad2;
+	background: none;
+}
+#vdg-header .nav-dropdown li a{
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-block;
+	width: 100px;
+	color: #34495e;
+}
+#vdg-header .nav-dropdown li a:hover{
+	color: #008ad2;
+}
+.nav-dropdown-upicon{
+	height: 10px;
+	background: url(../img/top.png) no-repeat center center;
+	display: block;
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	top: -10px;
+}

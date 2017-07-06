@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>vue-test</title>
+		<link rel="stylesheet" type="text/css" href="css/test-vue.css" />
+		<script src="js/vue.js"></script>
+		<script src="js/vue-router.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+	</head>
+
+	<body>
+		<header>test</header>
+		<div class="test-body" id="app-nav">
+			<div class="test-nav">
+				<div>
+					<ul>
+						<li>
+							<router-link to='/home'>项目</router-link>
+						</li>
+						<li>
+							<router-link to='/pageone'>设计师</router-link>
+						</li>
+						<li>
+							<router-link to='/pagetwo'>个人</router-link>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="test-content">
+				<router-view></router-view>
+			</div>
+		</div>
+		<script>
+			var one = {
+				data() {
+					return {
+						loading: false,
+						users: [],
+					}
+				},
+				created() {
+					// 组件创建完后获取数据，
+					// 此时 data 已经被 observed 了
+					this.loading = true;
+					this.create_proj_form();
+				},
+				watch: {
+					'$route.params.pageSlug' () {
+						this.create_proj_form();
+					}
+					//					'$route' (to, from) {
+					//						var toDepth = to.path.split('/').length;
+					//						var fromDepth = from.path.split('/').length;
+					//						console.log(to);
+					//					}
+				},
+				methods: {
+					create_proj_form: function() {
+						console.log();
+						var _this = this;
+						$.ajax({
+							type: "get",
+							url: "http://www.vdspace.cn/vdg/app_api.php?mobile_action=appapi_designer_list&model=designerku",
+							async: true,
+							success: function(res, status) {
+								if(res.code == '200') {
+									truedata = res.data.USERS;
+									var usersid = [];
+									for(var k = 0; k < 10000; k++) {
+										if(truedata[k] && k == truedata[k].ID) {
+											usersid.push({
+												id: k,
+												name: truedata[k].NAME,
+											})
+										}
+									}
+									var users = [];
+									for(var i = 0; i < usersid.length; i++) {
+										users.push({
+											name: usersid[i] ? usersid[i].name : '',
+											id: usersid[i] ? '/pageone/' + usersid[i].id : '',
+										})
+									}
+									_this.users = users;
+									_this.loading = false;
+								} else {
+									console.log(data.message);
+								}
+							},
+							error: function(status, data) {
+								console.log(data);
+							}
+						});
+					}
+				},
+				template: "<div class='project_form'>" +
+					"<div v-if='loading'>loading...</div>" +
+					"<ul v-else>" +
+					"<li v-for='user in users'><router-link :to='user.id'>{{ user.name }}</router-link></li>" +
+					"</ul>" +
+					"</div>",
+			};
+			var two = {
+				template: "<div class='project_form'></div>",
+			};
+
+			var Home = {
+				data() {
+					return {
+						loading: false,
+						projs: [],
+					}
+				},
+				created() {
+					// 组件创建完后获取数据，
+					// 此时 data 已经被 observed 了
+					this.loading = true;
+					var _this = this;
+					$.ajax({
+						type: "get",
+						url: "http://www.vdspace.cn/vdg/app_api.php?mobile_action=appapi_lead_list&SearchType=ALL",
+						async: true,
+						success: function(res, status) {
+							if(res.code == '200') {
+								truedata = res.data.LEAD;
+								_this.create_proj_form(truedata);
+							} else {
+								console.log(res.data.message);
+							}
+						},
+						error: function(status, data) {
+							console.log(data);
+						}
+					});
+				},
+				watch: {
+					'$route.params.pageSlug' () {
+						this.create_proj_form();
+					}
+				},
+				methods: {
+					create_proj_form: function(truedata) {
+						var projs = [];
+						this.error = this.post = null;
+						for(var i = 0; i < truedata.length; i++) {
+							if(truedata[i].GROUP) {
+								projs.push({
+									title: truedata[i].LEAD.TITLE,
+									id: truedata[i].LEAD.ID ? '/home/' + truedata[i].LEAD.ID : '',
+								});
+							}
+						}
+						this.projs = projs;
+						this.loading = false;
+					}
+				},
+				template: "<div class='project_form'>" +
+					"<div v-if='loading'>loading...</div>" +
+					"<ul v-else>" +
+					"<li v-for='proj in projs'><router-link :to='proj.id'>{{ proj.title }}</router-link></li>" +
+					"</ul>" +
+					"</div>",
+			};
+			var three = {
+				template: "<div class='project_form'><ul><li>this is proj detail</li></ul></div>"
+			};
+			var four = {
+				template: "<div class='project_form'><ul><li>this is user detail</li></ul></div>"
+			};
+			var router = new VueRouter({
+				mode: 'hash',
+				routes: [{
+					path: '/home',
+					component: Home,
+				}, {
+					path: '/pageone',
+					component: one
+				}, {
+					path: '/pagetwo',
+					component: two
+				}, {
+					path: '*',
+					component: Home
+				}, {
+					path: '/home/:id',
+					component: three
+				}, {
+					path: '/pageone/:id',
+					component: four
+				}],
+				linkActiveClass: 'active',
+			});
+			var app = new Vue({
+				router,
+			}).$mount('#app-nav');
+		</script>
+	</body>
+
+</html>

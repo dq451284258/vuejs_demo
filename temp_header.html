@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>header</title>
+		<link rel="stylesheet" type="text/css" href="css/animate.css" />
+		<link rel="stylesheet" type="text/css" href="css/temp_header.css" />
+		<link rel="stylesheet" type="text/css" href="css/temp_popup.css"/>
+		<script src="js/vue.js"></script>
+		<script src="js/vue-router.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+	</head>
+
+	<body>
+		<div class="vdg-header" id="vdg-header">
+			<a id="logo" href="#">
+				<img src="img/logo-.png" />
+			</a>
+			<ul id="vdg-header-left-nav">
+				<li v-for="leftcontent in leftnavcontents" v-on:click="makeactive(leftcontent.class);" v-bind:id="leftcontent.class" v-bind:class="{active:leftcontent.active}" v-on:mouseover="openchild(leftcontent.class);" v-on:mouseout="closechild();">
+					<a class="nav-link" :href="leftcontent.href">{{ leftcontent.text }}</a>
+					<transition name="bounce">
+						<ul v-if="leftcontent.children" class="nav-dropdown" v-show="leftcontent.showchild">
+							<i class="nav-dropdown-upicon"></i>
+							<li v-for="child in leftcontent.children" @click="modal(child.click)">
+								<a :href="child.href" @click.prevent>{{ child.text }}</a>
+							</li>
+						</ul>
+					</transition>
+				</li>
+			</ul>
+			<ul id="vdg-header-right-nav">
+				<li v-for="rightcontent in rightnavcontents" v-on:click="makeactive(rightcontent.class);" v-bind:id="rightcontent.class" v-bind:class="{active:rightcontent.active}" v-on:mouseover="openchild(rightcontent.class);" v-on:mouseout="closechild();">
+					<a class="nav-link" :href="rightcontent.href">{{ rightcontent.text }}</a>
+					<transition name="bounce">
+					<ul v-if="rightcontent.children" class="nav-dropdown" v-show="rightcontent.showchild" >
+						<i class="nav-dropdown-upicon"></i>
+						<li v-for="child in rightcontent.children" @click="modal(child.click)">
+							<a :href="child.href" @click.prevent>{{ child.text }}</a>
+						</li>
+					</ul>
+					</transition>
+				</li>
+			</ul>
+		</div>
+		<div id="modal">
+			<modal_template v-if='showModalCheck' @close="showModalCheck = false" @open="showModalCheck = true"></modal_template>
+		</div>
+		<script type="text/template" id="modal_template">
+			<transition name="modal">
+				<div class="modal-mask" @click="$emit('close')">
+					<div class="modal-wrapper">
+						<div class="modal-container" @click.stop="$emit('open')">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="modal-header-inner">
+										logout???
+									</div>
+								</div>
+								<div class="modal-body">
+									<p>this is text</p>
+									<p>this is text</p>
+									<p>this is text</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="modal-btn modal-btn-text modal-btn-large" @click.stop="$emit('close')">
+									<span>取消</span></button>
+									<button type="button" class="modal-btn modal-btn-primary modal-btn-large">
+									<span>确定</span></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</transition>
+		</script>
+		<script>
+			var nav = new Vue({
+				el: '#vdg-header',
+				data: {
+					leftnavcontents: [{
+							href: '#home',
+							text: '首页',
+							class: 'home',
+							active: false
+						},
+						{
+							href: '#Cteamwork',
+							text: '云协同',
+							class: 'Cteamwork',
+							active: false
+						},
+						{
+							href: '#Cexpert',
+							text: '云专家',
+							class: 'Cexpert',
+							active: false
+						},
+						{
+							href: '#Csoftware',
+							text: '云软件',
+							class: 'Csoftware',
+							active: false
+						},
+						{
+							href: '#more',
+							text: '更多',
+							class: 'more',
+							active: false,
+							showchild: false,
+							children: [{
+									href: '#Cstandard',
+									text: '云规格',
+									class: 'Cstandard',
+									active: false,
+									click:false,
+								},
+								{
+									href: '#Cmarket',
+									text: '云市场',
+									class: 'Cmarket',
+									active: false,
+									click:'modal',
+								}
+							],
+						}
+					],
+					rightnavcontents: [{
+							href: '#personcenter',
+							text: '个人中心',
+							class: 'personcenter',
+							active: false
+						},
+						{
+							href: '#teamworking',
+							text: '协同平台',
+							class: 'teamworking',
+							active: false
+						},
+						{
+							href: '#name',
+							text: 'name',
+							class: 'name',
+							active: false,
+							showchild: false,
+							children: [{
+								href: 'temp_popup.html',
+								text: '退出',
+								class: 'logout',
+								active: false,
+								click:'modal'
+							}],
+						},
+					],
+				},
+				mounted:function(){
+					
+				},
+				methods: {
+					makeactive: function(obj) {
+						var navcont = this.getallcontents();
+						for(var i = 0; i < navcont.length; i++) {
+							if(navcont[i].class == obj) {
+								navcont[i].active = true;
+							} else {
+								navcont[i].active = false;
+							}
+						}
+					},
+					openchild: function(obj) {
+						var navcont = this.getallcontents();
+						for(var i = 0; i < navcont.length; i++) {
+							if(navcont[i].children && navcont[i].class == obj) {
+								navcont[i].showchild = true;
+							}
+						}
+					},
+					closechild: function() {
+						var navcont = this.getallcontents();
+						for(var i = 0; i < navcont.length; i++) {
+							if(navcont[i].children) {
+								navcont[i].showchild = false;
+							}
+						}
+					},
+					modal:function(obj){
+						if(obj && obj != false && obj == 'modal'){
+							modal.open();
+						}
+					},
+					getallcontents: function() {
+						var content = new Array();
+						content = this.leftnavcontents.concat(this.rightnavcontents);
+						return content;
+					}
+				}
+			});
+			var modal = new Vue({
+				el: '#modal',
+				data: {
+					showModalCheck: false,
+				},
+
+				methods: {
+					open: function() {
+						this.showModalCheck = true;
+						//event.cancelBubble = true;
+					},
+					close: function() {
+						this.showModalCheck = false;
+					},
+				},
+
+				components: {
+					'modal_template': {
+						props: [],
+						template: '#modal_template'
+					},
+				}
+
+			});
+		</script>
+	</body>
+
+</html>

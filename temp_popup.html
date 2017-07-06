@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>popup</title>
+		<link rel="stylesheet" type="text/css" href="css/animate.css" />
+		<link rel="stylesheet" type="text/css" href="css/temp_popup.css" />
+		<script src="js/vue.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+	</head>
+
+	<body>
+		<button class="modal-btn  modal-btn-primary" onclick="modal.open()">查看</button>
+		<div id="modal">
+			<modal_template v-if='showModalCheck' @close="showModalCheck = false" @open="showModalCheck = true"></modal_template>
+		</div>
+		<script type="text/template" id="modal_template">
+			<transition name="modal">
+				<div class="modal-mask" @click="$emit('close')">
+					<div class="modal-wrapper">
+						<div class="modal-container" @click.stop="$emit('open')">
+							<div class="modal-content">
+								<div class="modal-header">
+									<div class="modal-header-inner">
+										header
+									</div>
+								</div>
+								<div class="modal-body">
+									<p>this is text</p>
+									<p>this is text</p>
+									<p>this is text</p>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="modal-btn modal-btn-text modal-btn-large" @click.stop="$emit('close')">
+									<span>取消</span></button>
+									<button type="button" class="modal-btn modal-btn-primary modal-btn-large">
+									<span>确定</span></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</transition>
+		</script>
+		<script>
+			var modal = new Vue({
+				el: '#modal',
+				data: {
+					showModalCheck: false,
+				},
+
+				methods: {
+					open: function() {
+						this.showModalCheck = true;
+						//event.cancelBubble = true;
+					},
+					close: function() {
+						this.showModalCheck = false;
+					},
+				},
+
+				components: {
+					'modal_template': {
+						props: [],
+						template: '#modal_template'
+					},
+				}
+
+			});
+		</script>
+	</body>
+
+</html>
