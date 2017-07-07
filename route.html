@@ -33,16 +33,14 @@
 			</div>
 		</div>
 		<script>
-			var one = {
-				data() {
+			var one = Vue.extend({
+				data:function() {
 					return {
 						loading: false,
 						users: [],
 					}
 				},
-				created() {
-					// 组件创建完后获取数据，
-					// 此时 data 已经被 observed 了
+				created:function() {
 					this.loading = true;
 					this.create_proj_form();
 				},
@@ -50,15 +48,9 @@
 					'$route.params.pageSlug' () {
 						this.create_proj_form();
 					}
-					//					'$route' (to, from) {
-					//						var toDepth = to.path.split('/').length;
-					//						var fromDepth = from.path.split('/').length;
-					//						console.log(to);
-					//					}
 				},
 				methods: {
 					create_proj_form: function() {
-						console.log();
 						var _this = this;
 						$.ajax({
 							type: "get",
@@ -101,19 +93,19 @@
 					"<li v-for='user in users'><router-link :to='user.id'>{{ user.name }}</router-link></li>" +
 					"</ul>" +
 					"</div>",
-			};
+			});
 			var two = {
-				template: "<div class='project_form'></div>",
+				template: "<div class='project_form'>person</div>",
 			};
 
-			var Home = {
-				data() {
+			var Home = Vue.extend({
+				data:function() {
 					return {
 						loading: false,
 						projs: [],
 					}
 				},
-				created() {
+				created:function() {
 					// 组件创建完后获取数据，
 					// 此时 data 已经被 observed 了
 					this.loading = true;
@@ -162,7 +154,7 @@
 					"<li v-for='proj in projs'><router-link :to='proj.id'>{{ proj.title }}</router-link></li>" +
 					"</ul>" +
 					"</div>",
-			};
+			});
 			var three = {
 				template: "<div class='project_form'><ul><li>this is proj detail</li></ul></div>"
 			};
