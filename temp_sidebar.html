@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>sidebar</title>
+		<link rel="stylesheet" type="text/css" href="css/animate.css" />
+		<link rel="stylesheet" type="text/css" href="css/temp_sidebar.css" />
+		<script src="js/vue.js"></script>
+		<script src="js/vue-router.js"></script>
+		<script src="js/smooth-scroll.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+		<script type="text/javascript" src="js/vue-common.js"></script>
+	</head>
+
+	<body>
+		<div id="main" class="fix-sidebar">
+			<div class="sidebar">
+				<div class="list">
+					<ul class="menu-root">
+					</ul>
+				</div>
+			</div>
+			<div class="content api with-sidebar ">
+				<a v-for="content in contents" :href="content.link" data-scroll>
+					<h3 v-bind:id="content.name" v-bind:data-scroll-id="content.name" tabindex="-1" style="outline: none;">{{ content.name }}</h3>
+				</a>
+			</div>
+		</div>
+		<script>
+			var main = new Vue({
+				el: '#main',
+				data: {
+					contents: []
+				},
+				mounted: function() {
+					var _this = this;
+					$.ajax({
+						type: "get",
+						url: "http://www.vdspace.cn/vdg/app_api.php?mobile_action=appapi_designer_list&model=designerku",
+						async: true,
+						success: function(res, status) {
+							if(res.code == '200') {
+								truedata = res.data.USERS;
+								var usersid = [];
+								for(var k = 0; k < 10000; k++) {
+									if(truedata[k] && k == truedata[k].ID) {
+										usersid.push({
+											id: k,
+											name: truedata[k].NAME,
+										})
+									}
+								}
+								var users = [];
+								for(var i = 0; i < usersid.length; i++) {
+									users.push({
+										name: usersid[i] ? usersid[i].name : '',
+										link:usersid[i] ?'#'+ usersid[i].name : '',
+									})
+								}
+								_this.contents = users;
+							} else {
+								console.log(data.message);
+							}
+						},
+						error: function(status, data) {
+							console.log(data);
+						}
+					});
+				},
+				updated:function(){
+					initSubHeaders();
+				}
+			});
+		</script>
+	</body>
+
+</html>

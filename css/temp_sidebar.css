@@ -1,0 +1,60 @@
+#main {
+    position: relative;
+    z-index: 1;
+    padding: 0 60px 30px;
+    overflow-x: hidden;
+}
+#main.fix-sidebar .sidebar {
+    position: fixed;
+}
+.sidebar {
+    position: absolute;
+    z-index: 10;
+    top: 61px;
+    left: 0;
+    bottom: 0;
+    padding: 40px 0 30px 60px;
+    width: 260px;
+    margin-right: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+}
+.content {
+    position: relative;
+    padding: 2.2em 0;
+    max-width: 225px;
+    margin: 0 auto;
+}
+.sidebar ul {
+    list-style-type: none;
+    margin: 0;
+    line-height: 1.5em;
+    padding-left: 1em;
+}
+.sidebar .menu-sub {
+    font-size: 0.85em;
+}
+.sidebar li {
+    margin-top: 0.5em;
+}
+a {
+    text-decoration: none;
+    color: #34495e;
+}
+.content a {
+    color: #42b983;
+    font-weight: 600;
+}
+.content h3 {
+    margin: 52px 0 1.2em;
+    position: relative;
+    z-index: -1;
+    height: 300px;
+    border: 1px solid #888888;
+}
+.sidebar .section-link.active {
+    font-weight: bold;
+    color: #42b983;
+}
