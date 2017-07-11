@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/animate.css" />
+		<script src="js/vue.js"></script>
+		<script src="js/jquery-1.11.1.js"></script>
+		<script src="js/lodash.js"></script>
+	</head>
+
+	<body>
+		<div id="watch-example">
+			<p>
+				search:
+				<input v-model="question">
+			</p>
+			<div>
+				<ul>
+					<li v-for="answer in answers">{{ answer.title }}</li>
+				</ul>
+			</div>
+		</div>
+		<script>
+			var watchExampleVM = new Vue({
+				el: '#watch-example',
+				data: {
+					question: '',
+					answers: []
+				},
+				watch: {
+					// 如果 question 发生改变，这个函数就会运行
+					question: function(newQuestion) {
+						this.answers = [{title:'waiting for you...'}]
+						this.getAnswer(newQuestion)
+					}
+				},
+				methods: {
+					getAnswer: _.debounce(function(newQuestion) {
+						var _this = this;
+						$.ajax({
+							type: "get",
+							url: "http://www.vdspace.cn/vdg/app_api.php?mobile_action=appapi_lead_list&SearchType=ALL",
+							async: true,
+							success: function(res, status) {
+								if(res.code == '200') {
+									truedata = res.data.LEAD;
+									var projs = [];
+									var len = (newQuestion>truedata.length)?truedata.length:newQuestion;
+									for(var i = 0; i < len; i++) {
+										if(truedata[i].GROUP) {
+											projs.push({
+												title: truedata[i].LEAD.TITLE,
+												id: truedata[i].LEAD.ID ? '/home/' + truedata[i].LEAD.ID : '',
+											});
+										}
+									}
+									_this.answers = projs;
+								} else {
+									console.log(res.data.message);
+								}
+							},
+							error: function(status, data) {
+								console.log(data);
+							}
+						});
+					}, 500)
+				}
+			})
+		</script>
+	</body>
+
+</html>
