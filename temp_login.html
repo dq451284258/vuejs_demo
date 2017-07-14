@@ -3,12 +3,10 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>header</title>
-		<link rel="stylesheet" type="text/css" href="css/animate.css" />
+		<title>login</title>
+		<link rel="stylesheet" type="text/css" href="css/temp_login.css" />
 		<link rel="stylesheet" type="text/css" href="css/temp_header.css" />
-		<link rel="stylesheet" type="text/css" href="css/temp_popup.css" />
 		<script src="js/vue.js"></script>
-		<script src="js/vue-router.js"></script>
 		<script src="js/jquery-1.11.1.js"></script>
 	</head>
 
@@ -75,7 +73,136 @@
 				</div>
 			</transition>
 		</script>
+		<div class="wrap" id="login">
+			<div class="container login-container">
+				<div class="login-container-head">登录云华建账号</div>
+				<div class="login-container-body">
+					<form class="passform" name="loginform" @submit.prevent="onSubmit()">
+						<p class="pass-form-item">
+							<span class="pass-generalError" v-if="errormsg">{{ errormsg }}</span>
+						</p>
+						<p class="pass-form-item" :class="{'activeinput':inputfocus.username}">
+							<label class="pass-label pass-label-username"></label>
+							<input class="pass-input pass-input-username" type="text" autocomplete="off" v-model="message.username" name="username" v-on:focus="focus('username')" v-on:blur="losefocus('username')" />
+						</p>
+						<p class="pass-form-item" :class="{'activeinput':inputfocus.password}">
+							<label class="pass-label pass-label-password"></label>
+							<input class="pass-input pass-input-password" type="password" autocomplete="off" v-model="message.password" name="password" v-on:focus="focus('password')" v-on:blur="losefocus('password')" />
+						</p>
+						<p class="pass-form-item pass-form-item-memberpass">
+							<input type="checkbox" checked="checked" />
+							<label class="label-text">下次自动登录</label>
+						</p>
+						<p class="pass-form-item">
+							<input type="submit" />
+							<a href="temp_register.html" target="_blank" class="pass-reglink">立即注册</a>
+							<a href="#" class="pass-fgtpwd">忘记密码</a>
+						</p>
+					</form>
+				</div>
+			</div>
+			<ul>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
 		<script>
+			var login = new Vue({
+				el: '#login',
+				data: {
+					message: {},
+					inputfocus: {
+						username: false,
+						password: false,
+					},
+					errormsg: false,
+				},
+				methods: {
+					onSubmit: function() {
+						if(this.message.username == '') {
+							this.focus('username');
+							this.errormsg = '请您输入手机号';
+							return false;
+						} else if(this.message.password == '') {
+							this.focus('password');
+							this.errormsg = '请您输入密码';
+							return false;
+						} else {
+							this.errormsg = false;
+						}
+						var _this = this;
+						$.ajax({
+							type: "post",
+							url: "http://www.vdspace.cn/vdg/api/authorization/login",
+							data: {
+								username: _this.message.username,
+								password: _this.message.password
+							},
+							header: {
+								"Access-Control-Allow-Origin": "*"
+							},
+							dataType: 'json',
+							async: true,
+							success: function(data, result) {
+								console.log(data);
+								if(data.result == 'success') {
+
+								} else {
+									_this.errormsg = data.data.errormsg;
+									console.log(data);
+								}
+							},
+							error: function(result, data) {
+								_this.errormsg = data;
+								console.log(data);
+							}
+						});
+					},
+					focus: function(type) {
+						if(type && type == 'username') {
+							this.inputfocus.password = false;
+							this.inputfocus.username = true;
+						} else if(type && type == 'password') {
+							this.inputfocus.username = false;
+							this.inputfocus.password = true;
+						}
+					},
+					losefocus: function(type) {
+						if(type && type == 'username') {
+							this.inputfocus.username = false;
+						} else if(type && type == 'password') {
+							this.inputfocus.password = false;
+						}
+					}
+				},
+				//				directives: {
+				//					focus: {
+				//						inserted: function(el, option) {
+				//							var value = option.value;
+				//								value = {
+				//									cls: value.cls,
+				//									foc: value.foc
+				//								};
+				//							if(el.classList.contains(value.cls) && value.foc)
+				//								el.focus();
+				//						},
+				//						bind:function(el){
+				//							console.log(this)
+				//						},
+				//						update: function(el, value, oldValue) {
+				//							
+				//						}
+				//					}
+				//				}
+			})
 			var nav = new Vue({
 				el: '#vdg-header',
 				data: {
